@@ -1,5 +1,8 @@
 pragma solidity >=0.5.0 <0.6.0;
 
+/**
+ * @author Ricardo Guilherme Schmidt (Status Research & Development GmbH)  
+ */
 interface Delegation {
     
     event Delegate(address who, address to);

@@ -4,7 +4,9 @@ import "../token/MiniMeToken.sol";
 import "./delegation/DelegationFactory.sol";
 import "./proposal/ProposalFactory.sol";
 
-
+/**
+ * @author Ricardo Guilherme Schmidt (Status Research & Development GmbH)  
+ */
 contract Democracy {
 
     struct Topic {
@@ -32,7 +34,6 @@ contract Democracy {
     MiniMeToken public token;
     DelegationFactory public delegationFactory;
     
-
     mapping (bytes32 => Topic) topics;
     mapping (address => ProposalData) proposals;
 
