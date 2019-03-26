@@ -1,7 +1,7 @@
 {
-  "name": "status-contracts",
+  "name": "topic-democracy",
   "version": "0.0.1",
-  "description": "",
+  "description": "Liquid democracy for permissionless governance through trust networks of delegates.",
   "scripts": {
     "solidity-coverage": "./node_modules/.bin/solidity-coverage",
     "test": "embark test",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/status-im/contracts.git"
+    "url": "git+https://github.com/status-im/topic-democracy.git"
   },
   "author": "Status Research & Development GMBH",
-  "license": "ISC",
+  "license": "CC0",
   "bugs": {
-    "url": "https://github.com/status-im/contracts/issues"
+    "url": "https://github.com/status-im/topic-democracy/issues"
   },
-  "homepage": "https://github.com/status-im/contracts#readme",
+  "homepage": "https://github.com/status-im/topic-democracy#readme",
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.2.3"
