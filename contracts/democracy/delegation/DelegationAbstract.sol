@@ -1,13 +1,14 @@
 pragma solidity >=0.5.0 <0.6.0;
 
 import "../../deploy/InstanceAbstract.sol";
+import "../../common/Controlled.sol";
 import "./Delegation.sol";
 
 /**
  * @title DelegationAbstract
  * @author Ricardo Guilherme Schmidt (Status Research & Development GmbH). 
  */
-contract DelegationAbstract is InstanceAbstract, Delegation {
+contract DelegationAbstract is InstanceAbstract, Controlled, Delegation {
     struct DelegateSet {
         uint96 fromBlock; //when this was updated
         address to; //who recieved this delegaton

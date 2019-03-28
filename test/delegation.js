@@ -54,7 +54,7 @@ contract("DelegationBase", function() {
 
 
     it("creates headless delegation", async function () {
-        let result = await DelegationFactory.methods.createDelegation(utils.zeroAddress,utils.zeroAddress).send();
+        let result = await DelegationFactory.methods.createDelegation(utils.zeroAddress).send();
         var NoDefaultDelegation = new web3.eth.Contract(DelegationBase._jsonInterface, result.events.InstanceCreated.returnValues[0]);
         result = await NoDefaultDelegation.methods.delegatedTo(accounts[0]).call()
         assert.equal(result, utils.zeroAddress)
@@ -63,7 +63,7 @@ contract("DelegationBase", function() {
     })
 
     it("creates root delegation", async function () {
-        let result = await DelegationFactory.methods.createDelegation(utils.zeroAddress,defaultDelegate).send();
+        let result = await DelegationFactory.methods.createDelegation(utils.zeroAddress,defaultDelegate,defaultDelegate).send();
         RootDelegation = new web3.eth.Contract(DelegationBase._jsonInterface, result.events.InstanceCreated.returnValues[0]);
         result = await RootDelegation.methods.delegatedTo(utils.zeroAddress).call()
         assert.equal(result, defaultDelegate)  
