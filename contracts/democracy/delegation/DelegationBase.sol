@@ -17,13 +17,23 @@ contract DelegationBase is DelegationAbstract {
     }
 
     /** 
-     * @notice Changes the delegation of `msg.sender` to `_to`. if _to 0x00: delegate to self. 
+     * @notice Changes the delegation of `msg.sender` to `_to`. 
      *         In case of having a parent proxy, if never defined, fall back to parent proxy. 
      *         If once defined and want to delegate to parent proxy, set `_to` as parent address. 
      * @param _to To what address the caller address will delegate to.
      */
     function delegate(address _to) external {
         updateDelegate(msg.sender, _to);
+    }
+
+    /** 
+     * @notice Changes the delegation of `address(0)` to `_to`.
+     *         By default accounts delegate to `address(0)`. 
+     *         Therefore the delegate of `address(0)` is the default delegate of all accounts.
+     * @param _defaultDelegate default delegate address
+     */
+    function setDefaultDelegate(address _defaultDelegate) external onlyController {
+        updateDelegate(address(0), _defaultDelegate);
     }
 
     /**
