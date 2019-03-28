@@ -27,7 +27,8 @@ contract DelegationFactory is InstanceFactory {
 
     function createDelegation(
         Delegation /*_parent*/,
-        address /*defaultDelegate*/
+        address /*_controller*/,
+        address /*_defaultDelegate*/
     ) 
         external 
         returns (DelegationAbstract instance)
