@@ -15,7 +15,7 @@ contract DelegationInit is DelegationAbstract {
     }
 
     modifier notImplemented {
-        revert("Wrong model");
+        if(address(base) == address(0)) revert("Wrong model");
         _;
     }
 
