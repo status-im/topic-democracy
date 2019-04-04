@@ -10,13 +10,14 @@
     "url": "git+https://github.com/status-im/topic-democracy.git"
   },
   "author": "Status Research & Development GMBH",
-  "license": "CC0",
+  "license": "CC0-1.0",
   "bugs": {
     "url": "https://github.com/status-im/topic-democracy/issues"
   },
   "homepage": "https://github.com/status-im/topic-democracy#readme",
   "devDependencies": {
     "embarkjs-connector-web3": "^4.0.0",
+    "ethereumjs-util": "^6.1.0",
     "react": "16.7.0",
     "react-bootstrap": "0.32.4",
     "react-dom": "16.7.0"
