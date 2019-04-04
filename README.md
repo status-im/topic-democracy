@@ -53,14 +53,11 @@ Gas intense operations are done in tabulation, using signatures and merkle proof
 The tabulation extends the finalization block at every tabulation. 
 
 ## Running
-Requires Embark 4. Recommended: https://github.com/creationix/nvm
+Requires `geth` command available in $PATH for npm start
  ```
- nvm install v10.15
- nvm use v10.15
- npm install -g embark
  git clone https://github.com/status-im/topic-democracy.git
  cd topic-democracy
  npm install
- embark test
- embark run
+ npm test
+ npm start
  ```
