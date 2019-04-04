@@ -47,7 +47,7 @@ function mintTokens(accounts, amount) {
 
 function newDelegation(topDelegation, defaultDelegate) {
     return new Promise((resolve, reject) => {
-        DelegationFactory.methods.createDelegation(topDelegation, defaultDelegate).send().on('receipt', (receipt) => {
+        DelegationFactory.methods.createDelegation(topDelegation, defaultDelegate, defaultDelegate).send().on('receipt', (receipt) => {
             resolve(new web3.eth.Contract(Delegation._jsonInterface, receipt.events.InstanceCreated.returnValues.instance));
         }).on('error', (error) => {
             reject(error);
