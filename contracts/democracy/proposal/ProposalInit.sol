@@ -62,7 +62,7 @@ contract ProposalInit is ProposalAbstract {
     function voteDirect(Vote) external{}
     function tabulateDirect(address ) external{}
     function tabulateSigned(Vote, uint256, bytes32[] calldata, bytes calldata) external{}
-    function tabulateDelegated(address) external{}
+    function tabulateDelegated(address,bool) external{}
     function precomputeDelegation(address, bool) external{}
     function finalize() external{}
     function clear() external{}

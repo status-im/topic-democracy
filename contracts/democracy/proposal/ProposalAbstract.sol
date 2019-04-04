@@ -4,6 +4,7 @@ import "../../common/Controlled.sol";
 import "../../deploy/InstanceAbstract.sol";
 import "../../token/MiniMeToken.sol";
 import "../delegation/Delegation.sol";
+import "../delegation/DelegationReader.sol";
 import "./Proposal.sol";
 
 /**
@@ -11,10 +12,9 @@ import "./Proposal.sol";
  * @author Ricardo Guilherme Schmidt (Status Research & Development GmbH)
  * Store votes and tabulate results for Democracy. 
  */
-contract ProposalAbstract is InstanceAbstract, Proposal, Controlled {   
+contract ProposalAbstract is InstanceAbstract, DelegationReader, Proposal, Controlled {   
 
     MiniMeToken public token;
-    Delegation public delegation;
     uint256 public tabulationBlockDelay;
     
     bytes32 public dataHash;
@@ -27,7 +27,6 @@ contract ProposalAbstract is InstanceAbstract, Proposal, Controlled {
 
     //tabulation process 
     uint256 public lastTabulationBlock;
-    mapping(address => address) public delegationOf;
     mapping(address => address) public tabulated;
     mapping(uint8 => uint256) public results;
 
@@ -49,5 +48,15 @@ contract ProposalAbstract is InstanceAbstract, Proposal, Controlled {
         require(lastTabulationBlock != 0, "Tabulation not started");
         require(lastTabulationBlock + tabulationBlockDelay < block.number, "Tabulation not ended");
         _;
+    }
+
+    function validDelegate(
+        address _who
+    )        
+        internal
+        view
+        returns(bool) 
+    {
+        return voteMap[_who] != Vote.Null;
     }
 }

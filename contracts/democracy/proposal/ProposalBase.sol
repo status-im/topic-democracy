@@ -95,30 +95,31 @@ contract ProposalBase is ProposalAbstract, MessageSigned {
      * @dev might run out of gas, to prevent this, precompute the delegation
      * Should be called every time a nearer delegate tabulate their vote
      * @param _source holder which not voted but have a delegate that voted
+     * @param _cached true if should use lookup values from precomputed
      */
-    function tabulateDelegated(address _source) 
+    function tabulateDelegated(address _source, bool _cached) 
         external
         tabulationPeriod
     {
-        (address _claimer, Vote _vote) = findNearestDelegatable(_source); // try finding first delegate from chain which voted
-        setTabulation(_source, _claimer, _vote);
-    }   
+        address claimer = _cached ? cachedDelegateOfAt(_source, voteBlockEnd): delegateOfAt(_source, voteBlockEnd);
+        setTabulation(_source, claimer, voteMap[claimer]);
+    } 
 
     /** 
      * @notice precomputes a delegate vote based on current votes tabulated
      * @dev to precompute a very long delegate chain, go from the end to start with _clean false. 
      * @param _start who will have delegate precomputed
-     * @param _clean if true dont use precomputed results 
+     * @param _revalidate if true dont use precomputed results 
      * TODO: fix long delegate chain recompute in case new votes
      */
     function precomputeDelegation(
         address _start,
-        bool _clean
+        bool _revalidate
     ) 
         external 
         tabulationPeriod
     {
-        cacheDelegation(_start,_clean);
+        precomputeDelegateOf(_start, voteBlockEnd, _revalidate);
     }
     
     /**
@@ -186,6 +187,14 @@ contract ProposalBase is ProposalAbstract, MessageSigned {
     function getVotePrefixedHash(Vote _vote) external view returns (bytes32) { 
         return getSignHash(voteHash(_vote));
     }
+
+    function delegateOf(address _who) external view returns(address) {
+        return delegateOfAt(_who, voteBlockEnd);
+    }
+
+    function cachedDelegateOf(address _who) external view returns(address) {
+        return cachedDelegateOfAt(_who, voteBlockEnd);
+    }
     
     /**
      * @notice get result
@@ -245,34 +254,25 @@ contract ProposalBase is ProposalAbstract, MessageSigned {
         require(vote == Vote.Null, "Not delegatable");
         claimer = _source; // try finding first delegate from chain which voted
         while(vote == Vote.Null) {
-            address claimerDelegate = delegationOf[claimer];
-            if(claimerDelegate == address(0)){
-                claimerDelegate = delegation.delegatedToAt(claimer, voteBlockEnd);  
-            }
-            require(claimer != claimerDelegate, "No delegate vote found");
+            address claimerDelegate = delegation.delegatedToAt(claimer, voteBlockEnd);  
             claimer = claimerDelegate; 
             vote = voteMap[claimer]; //loads delegate vote.
         }
     }
 
-    function cacheDelegation(address _source, bool _clean) private returns (address delegate) {
-        delegate =  _source;
-        if(voteMap[_source] == Vote.Null) { 
-            if(!_clean) {
-                delegate = delegationOf[delegate];
+    function cachedFindNearestDelegatable(address _source) internal view returns (address claimer, Vote vote){
+        vote = voteMap[_source];
+        require(vote == Vote.Null, "Not delegatable");
+        claimer = _source; // try finding first delegate from chain which voted
+        while(vote == Vote.Null) {
+            address claimerDelegate = delegationOf[claimer];
+            if(claimerDelegate == address(0)){
+                claimerDelegate = delegation.delegatedToAt(claimer, voteBlockEnd);  
             }
-            if(delegate == address(0)){
-                delegate = delegation.delegatedToAt(_source, voteBlockEnd); //get delegate chain tail
-            }
+            claimer = claimerDelegate; 
+            vote = voteMap[claimer]; //loads delegate vote.
         }
-        
-        require(delegate != address(0), "No delegate vote found");
-        if(voteMap[delegate] == Vote.Null) {
-            delegate = cacheDelegation(delegate, _clean);
-        }
-        delegationOf[_source] = delegate;
-        return delegate;
-        
     }
+
 
 }

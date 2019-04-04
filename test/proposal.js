@@ -37,6 +37,17 @@ config({
 
       }
   });
+  
+  async function delegationOf(contract, influenceSrc) {
+    let delegation = [];
+    var curDelegate = influenceSrc;
+    do {
+        delegation.push(curDelegate)
+        curDelegate = await contract.methods.delegatedTo(curDelegate).call();
+    }while(!delegation.includes(curDelegate));
+    return delegation;
+}
+
 function mintTokens(accounts, amount) {
     return Promise.all(
         accounts.map((account) => {
@@ -68,7 +79,15 @@ async function tabulateDirect(proposal, account) {
 }
 
 async function tabulateDelegated(proposal, account) {
-    return addGas(proposal.methods.tabulateDelegated(account), web3.eth.defaultAccount);
+    let nc = proposal.methods.tabulateDelegated(account, false);
+    let yc = proposal.methods.tabulateDelegated(account, true);
+    let ng = await nc.estimateGas();
+    let yg = await yc.estimateGas();
+    var call = nc;
+    if(yg < ng && await proposal.methods.delegateOf(account).call() == await proposal.methods.cachedDelegateOf(account).call()){
+        call = yc;
+    }
+    return addGas(call, web3.eth.defaultAccount);
 }
 
 async function tabulateSigned(proposal, sig) {
@@ -103,7 +122,7 @@ contract("Proposal", function() {
             mintTokens(res, initialBalance).then((mintReceipts) => {
                 newDelegation(utils.zeroAddress, defaultDelegate).then((createdRoot) => {
                     RootDelegation = createdRoot;
-                    newDelegation(RootDelegation._address, utils.zeroAddress).then((createdChild) => {
+                    newDelegation(RootDelegation._address, defaultDelegate).then((createdChild) => {
                         ChildDelegation = createdChild;
                         Promise.all([ 
                             // root: 0 -> 1 -> 2 -> 3 (-> 5) 
@@ -119,7 +138,7 @@ contract("Proposal", function() {
                             RootDelegation.methods.delegate(accounts[9]).send({from: accounts[8]}),
                             RootDelegation.methods.delegate(accounts[6]).send({from: accounts[9]}),
                             // child: 5 -> 6
-                            ChildDelegation.methods.delegate(accounts[7]).send({from: accounts[5]})
+                            ChildDelegation.methods.delegate(accounts[6]).send({from: accounts[5]})
                         ]).then((delegateReceipts) => {
                             done();
                         })
@@ -227,7 +246,7 @@ contract("Proposal", function() {
 
         it("reject tabulateDelegated when voting not ended", async function () {
             assert.equal(
-                await utils.getEVMException(testProposal.methods.tabulateDelegated(accounts[0])),
+                await utils.getEVMException(testProposal.methods.tabulateDelegated(accounts[0], false)),
                 "Voting not ended")
         }); 
 
@@ -257,8 +276,8 @@ contract("Proposal", function() {
 
         it("reject tabulates when no delegate voted", async function () {;
             assert.equal(
-                await utils.getEVMException(testProposal.methods.tabulateDelegated(accounts[4])),
-                "No delegate vote found")
+                await utils.getEVMException(testProposal.methods.tabulateDelegated(accounts[4], false)),
+                "revert")
         }); 
 
         it("should not have a lastTabulationBlock", async function () {
@@ -308,11 +327,11 @@ contract("Proposal", function() {
 
         it("should not tabulate for delegate if voted ", async function () { 
             assert.equal(
-                await utils.getEVMException(testProposal.methods.tabulateDelegated(accounts[2])),
-                "Not delegatable")
+                await utils.getEVMException(testProposal.methods.tabulateDelegated(accounts[2], false)),
+                "Voter already tabulated")
             assert.equal(
-                await utils.getEVMException(testProposal.methods.tabulateDelegated(accounts[5])),
-                "Not delegatable")
+                await utils.getEVMException(testProposal.methods.tabulateDelegated(accounts[5], false)),
+                "Voter already tabulated")
         });  
 
         it("tabulates approve influence from direct delegate", async function () { 
@@ -337,7 +356,7 @@ contract("Proposal", function() {
 
         it("should not tabulate influence from circular delegation chain when none voted", async function () { 
             assert.equal(
-                await utils.getEVMException(testProposal.methods.tabulateDelegated(accounts[7])),
+                await utils.getEVMException(testProposal.methods.tabulateDelegated(accounts[7], false)),
                 "revert")
         });    
 
@@ -458,7 +477,7 @@ contract("Proposal", function() {
 
         it("reject tabulateDelegated after finalization", async function () {
             assert.equal(
-                await utils.getEVMException(testProposal.methods.tabulateDelegated(accounts[0])),
+                await utils.getEVMException(testProposal.methods.tabulateDelegated(accounts[0], false)),
                 "Tabulation ended"
             )
         }); 
@@ -577,7 +596,7 @@ contract("Proposal", function() {
         it("clear after finalization", async function () { 
             await testProposal.methods.clear().send({from: web3.eth.defaultAccount});
         }); 
-    })
+    });
 
     describe("test simple quorum reject", function() {
         var sigs = [];
@@ -674,7 +693,7 @@ contract("Proposal", function() {
         it("clear after finalization", async function () { 
             await testProposal.methods.clear().send({from: web3.eth.defaultAccount});
         }); 
-    })
+    });
 
     describe("test simple quorum approve", function() {
         var sigs = [];
@@ -771,6 +790,65 @@ contract("Proposal", function() {
         it("clear after finalization", async function () { 
             await testProposal.methods.clear().send({from: web3.eth.defaultAccount});
         }); 
-    }) 
+    });
+    
+    describe("test delegate precompute", function() {
+        var sigs = [];
+        var testProposal;
+        var blockStart;
+        var voteBlockEnd;
+        it("create proposal by factory", async function () {
+            blockStart = await web3.eth.getBlockNumber();
+            
+            receipt = await ProposalFactory.methods.createProposal(
+                MiniMeToken._address, 
+                ChildDelegation._address, 
+                "0xDA0", 
+                tabulationBlockDelay, 
+                blockStart, 
+                blockEndDelay, 
+                QUORUM_SIMPLE
+            ).send()
+            testProposal = new web3.eth.Contract(ProposalBase._jsonInterface, receipt.events.InstanceCreated.returnValues.instance);
+        });
+
+        it("include direct vote", async function () { 
+            
+            let receipt = await testProposal.methods.voteDirect(VOTE_APPROVE).send({from: accounts[8]});
+
+        });   
+
+        it("increases block number to vote block end", async function () {
+            voteBlockEnd = await testProposal.methods.voteBlockEnd().call();
+            await utils.setBlockNumber(+voteBlockEnd+1);
+            assert(await web3.eth.getBlockNumber() > voteBlockEnd, "Wrong block number")
+        }); 
+
+        it("should precompute delegate", async function () {
+            let gasBefore = await testProposal.methods.tabulateDelegated(accounts[0], true).estimateGas();
+            let call = testProposal.methods.precomputeDelegation(accounts[0],true);
+            await call.send({from: accounts[0], gas: await call.estimateGas()+ 10000 });
+            let gasAfter = await testProposal.methods.tabulateDelegated(accounts[0], true).estimateGas();
+            assert.equal(await testProposal.methods.cachedDelegateOf(accounts[0]).call(),await testProposal.methods.delegateOf(accounts[0]).call(), "Rendered wrong delegate");
+            assert(gasAfter < gasBefore, "Didn't reduced gas usage");
+            await tabulateDelegated(testProposal, accounts[0]);
+            
+        });
+
+        it("increses block to tabulation end", async function (){
+            await utils.increaseBlock(+tabulationBlockDelay+1);
+            let lastTabulationBlock = await testProposal.methods.lastTabulationBlock().call();
+            assert(await web3.eth.getBlockNumber() > +lastTabulationBlock+tabulationBlockDelay, "Wrong block number")
+        });
+
+        it("finalizes after tabulation end", async function (){
+            receipt = await testProposal.methods.finalize().send({from: web3.eth.defaultAccount});
+            assert.equal(receipt.events.FinalResult.returnValues.result, VOTE_APPROVE)
+        });
+
+        it("clear after finalization", async function () { 
+            await testProposal.methods.clear().send({from: web3.eth.defaultAccount});
+        }); 
+    })
     
 })

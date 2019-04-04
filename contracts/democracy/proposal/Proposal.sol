@@ -32,7 +32,8 @@ interface Proposal {
         bytes32[] calldata _proof,
         bytes calldata _signature
     ) external;
-    function tabulateDelegated(address _voter) external;
+
+    function tabulateDelegated(address _source, bool _cached) external;
     function precomputeDelegation(address _start, bool _clean) external;
     function finalize() external;
     function clear() external;
