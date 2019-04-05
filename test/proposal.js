@@ -2,6 +2,7 @@ const utils = require("../utils/testUtils")
 const { MerkleTree } = require('../utils/merkleTree.js');
 
 const DelegationFactory = require('Embark/contracts/DelegationFactory');
+const EmbarkJS = require('Embark/EmbarkJS');
 const MiniMeToken = require('Embark/contracts/MiniMeToken');
 const Delegation = require('Embark/contracts/Delegation');
 const ProposalFactory = require('Embark/contracts/ProposalFactory');
@@ -37,7 +38,7 @@ config({
 
       }
   });
-  
+
   async function delegationOf(contract, influenceSrc) {
     let delegation = [];
     var curDelegate = influenceSrc;
@@ -59,12 +60,29 @@ function mintTokens(accounts, amount) {
 function newDelegation(topDelegation, defaultDelegate) {
     return new Promise((resolve, reject) => {
         DelegationFactory.methods.createDelegation(topDelegation, defaultDelegate, defaultDelegate).send().on('receipt', (receipt) => {
-            resolve(new web3.eth.Contract(Delegation._jsonInterface, receipt.events.InstanceCreated.returnValues.instance));
+            resolve(new EmbarkJS.Blockchain.Contract({ abi: Delegation._jsonInterface, address: receipt.events.InstanceCreated.returnValues.instance}));
         }).on('error', (error) => {
             reject(error);
         });
     });
-    
+}
+
+function newProposal(MiniMeToken, Delegation, dataHash, tabulationBlockDelay, blockStart, blockEndDelay, quorumType) {
+    return new Promise((resolve, reject) => {
+        ProposalFactory.methods.createProposal(
+            MiniMeToken._address, 
+            Delegation._address, 
+            dataHash, 
+            tabulationBlockDelay, 
+            blockStart, 
+            blockEndDelay, 
+            quorumType
+        ).send().on('receipt', (receipt) => {
+            resolve(new EmbarkJS.Blockchain.Contract({ abi: ProposalBase._jsonInterface, address: receipt.events.InstanceCreated.returnValues.instance}));
+        }).on('error', (error) => {
+            reject(error);
+        });
+    });
 }
 
 async function addGas(call, from, amount=21000) {
@@ -165,17 +183,15 @@ contract("Proposal", function() {
         var voteBlockEnd;
         it("create proposal by factory", async function () {
             blockStart = +await web3.eth.getBlockNumber() + 10;
-            receipt = await ProposalFactory.methods.createProposal(
-                MiniMeToken._address, 
-                RootDelegation._address, 
+            testProposal = await newProposal(
+                MiniMeToken,  
+                RootDelegation, 
                 "0xDA0", 
                 tabulationBlockDelay, 
                 blockStart, 
                 blockEndDelay, 
                 QUORUM_QUALIFIED
-            ).send()
-            testProposal = new web3.eth.Contract(ProposalBase._jsonInterface, receipt.events.InstanceCreated.returnValues.instance);
-            
+            );
         });
         
         it("rejects signed votes while not voting period ", async function () { 
@@ -509,16 +525,15 @@ contract("Proposal", function() {
         it("create proposal by factory", async function () {
             blockStart = await web3.eth.getBlockNumber();
             
-            receipt = await ProposalFactory.methods.createProposal(
-                MiniMeToken._address, 
-                ChildDelegation._address, 
+            testProposal = await newProposal(
+                MiniMeToken, 
+                ChildDelegation, 
                 "0xDA0", 
                 tabulationBlockDelay, 
                 blockStart, 
                 blockEndDelay, 
                 QUORUM_QUALIFIED
-            ).send()
-            testProposal = new web3.eth.Contract(ProposalBase._jsonInterface, receipt.events.InstanceCreated.returnValues.instance);
+            );
         });
 
         it("include approve votes", async function () { 
@@ -606,16 +621,15 @@ contract("Proposal", function() {
         it("create proposal by factory", async function () {
             blockStart = await web3.eth.getBlockNumber();
             
-            receipt = await ProposalFactory.methods.createProposal(
-                MiniMeToken._address, 
-                ChildDelegation._address, 
+            testProposal = await newProposal(
+                MiniMeToken, 
+                ChildDelegation, 
                 "0xDA0", 
                 tabulationBlockDelay, 
                 blockStart, 
                 blockEndDelay, 
                 QUORUM_SIMPLE
-            ).send()
-            testProposal = new web3.eth.Contract(ProposalBase._jsonInterface, receipt.events.InstanceCreated.returnValues.instance);
+            );
         });
 
         it("include approve votes", async function () { 
@@ -702,17 +716,15 @@ contract("Proposal", function() {
         var voteBlockEnd;
         it("create proposal by factory", async function () {
             blockStart = await web3.eth.getBlockNumber();
-            
-            receipt = await ProposalFactory.methods.createProposal(
-                MiniMeToken._address, 
-                ChildDelegation._address, 
+            testProposal = await newProposal(
+                MiniMeToken, 
+                ChildDelegation, 
                 "0xDA0", 
                 tabulationBlockDelay, 
                 blockStart, 
                 blockEndDelay, 
                 QUORUM_SIMPLE
-            ).send()
-            testProposal = new web3.eth.Contract(ProposalBase._jsonInterface, receipt.events.InstanceCreated.returnValues.instance);
+            );
         });
 
         it("include approve votes", async function () { 
@@ -799,17 +811,14 @@ contract("Proposal", function() {
         var voteBlockEnd;
         it("create proposal by factory", async function () {
             blockStart = await web3.eth.getBlockNumber();
-            
-            receipt = await ProposalFactory.methods.createProposal(
-                MiniMeToken._address, 
-                ChildDelegation._address, 
+            testProposal = await newProposal(
+                MiniMeToken,
+                ChildDelegation, 
                 "0xDA0", 
                 tabulationBlockDelay, 
-                blockStart, 
-                blockEndDelay, 
-                QUORUM_SIMPLE
-            ).send()
-            testProposal = new web3.eth.Contract(ProposalBase._jsonInterface, receipt.events.InstanceCreated.returnValues.instance);
+                blockStart,
+                blockEndDelay,
+                QUORUM_SIMPLE);
         });
 
         it("include direct vote", async function () { 
