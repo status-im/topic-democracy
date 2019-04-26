@@ -80,7 +80,7 @@ class TransactionSendButton extends React.Component {
                 onClick={(e) => this.submitTransaction(e)}>
                 {text}
                 {txWaiting ? 
-                    <CircularProgress className={classes.progress} />
+                    <CircularProgress />
                     :
                     icon }
             </Button>

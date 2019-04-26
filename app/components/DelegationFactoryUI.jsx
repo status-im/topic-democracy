@@ -7,10 +7,18 @@ import { FormLabel, Paper, Grid } from '@material-ui/core';
 import TransactionSendButton from './TransactionSendButton';
 
 const styles = theme => ({
-  root: {
-    display: 'flex',
-  }
-});
+    paper: {
+      marginTop: theme.spacing.unit * 3,
+      marginBottom: theme.spacing.unit * 3,
+      padding: theme.spacing.unit * 2,
+      [theme.breakpoints.up(600 + theme.spacing.unit * 3 * 2)]: {
+        marginTop: theme.spacing.unit * 6,
+        marginBottom: theme.spacing.unit * 6,
+        padding: theme.spacing.unit * 3,
+      },
+    },
+  });
+
 
 const zeroIfNull = (address) => {
     return address ? address : "0x0000000000000000000000000000000000000000"
@@ -47,36 +55,33 @@ class DelegationFactoryUI extends React.Component {
         const { parent, controller, defaultDelegate } = this.state;
         const tx = sendTransaction(parent,controller,defaultDelegate);
         return (
-            <Paper>
-                <Grid container spacing={24}>
-                    <Grid item xs={12} sm={6}>
-                        <FormLabel component="legend">Parent Delegation</FormLabel>
-                        <EthAddress control={true} onChange={(parent) => this.setState({parent})} />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
+            <Paper className={classes.paper}>
+                <Grid container spacing={16}>
+                    <Grid item>
                         <FormLabel component="legend">Controller</FormLabel>
                         <EthAddress defaultValue={account} control={true} onChange={(controller) => this.setState({controller})}  />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item>
                         <FormLabel component="legend">Default Delegate</FormLabel>
                         <EthAddress control={true} onChange={(defaultDelegate) => this.setState({defaultDelegate})}  />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                
-                    <TransactionSendButton 
-                        sendTransaction={tx}
-                        disabled={!tx}
-                        account={account}
-                        onSend={(txHash) => {console.log("txHash",txHash)}}
-                        onResult={(result) => {console.log("result",result)}}
-                        onReceipt={(receipt) => {console.log("receipt",receipt)}}
-                        onError={(error) => {console.log("error",error)}}
-                    />
+                    <Grid item>
+                        <FormLabel component="legend">Parent Delegation</FormLabel>
+                        <EthAddress control={true} onChange={(parent) => this.setState({parent})} />
+                    </Grid> 
+                    <Grid item>
+                        <TransactionSendButton 
+                            sendTransaction={tx}
+                            disabled={!tx}
+                            account={account}
+                            text="Deploy Delegation"
+                            onSend={(txHash) => {console.log("txHash",txHash)}}
+                            onResult={(result) => {console.log("result",result)}}
+                            onReceipt={(receipt) => {console.log("receipt",receipt)}}
+                            onError={(error) => {console.log("error",error)}}
+                        />
                     </Grid>
-                    
-                </Grid>
-
-                
+                </Grid>            
             </Paper>
         );
     }
