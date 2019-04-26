@@ -5,18 +5,20 @@ import Delegation from 'Embark/contracts/Delegation';
 import { HashRouter, Route, Redirect, Link } from "react-router-dom";
 
 import './dapp.css';
-import Delegation from './components/Delegation';
+import DelegationUI from './components/DelegationUI';
+import DelegationFactoryUI from './components/DelegationFactoryUI';
+import { CssBaseline, AppBar, Toolbar, Typography } from '@material-ui/core';
 
 class App extends React.Component {
 
   constructor(props) {
     super(props);
 
-    this.handleSelect = this.handleSelect.bind(this);
+    //this.handleSelect = this.handleSelect.bind(this);
 
     this.state = {
       error: null,
-      account: null
+      defaultAccount: null
     };
   }
 
@@ -25,13 +27,13 @@ class App extends React.Component {
         if (err) {
             return this.setState({ error: err.message || err });
         }
-        this.setState({ account: web3.eth.defaultAccount, blockchainEnabled: true })
+        this.setState({ defaultAccount: web3.eth.defaultAccount, blockchainEnabled: true })
     });
 
 }
 
   render() {
-    const { blockchainEnabled, account } = this.state;
+    const { blockchainEnabled, defaultAccount } = this.state;
     if (!blockchainEnabled) {
         return (
             <div>Waiting for blockchain.</div>
@@ -45,8 +47,19 @@ class App extends React.Component {
     }
     return (
       <HashRouter hashType="noslash">
-        <Route exact path="/:address?" render={(match) => (
-          <Delegation account={account} Delegation={new EmbarkJS.Blockchain.Contract({ abi: Delegation._jsonInterface, address: match.param.address }) } />
+        <CssBaseline />
+        <AppBar position="absolute" color="default">
+          <Toolbar>
+            <Typography variant="h6" color="inherit" noWrap>
+              Topic Democracy
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Route exact path="/" render={(match) => (
+          <DelegationFactoryUI  account={defaultAccount} />
+        )} />
+        <Route path="/:address" render={(match) => (
+          <DelegationUI account={defaultAccount} Delegation={new EmbarkJS.Blockchain.Contract({ abi: Delegation._jsonInterface, address: match.param.address }) } />
         )} />
       </HashRouter>
     )

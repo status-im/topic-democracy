@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import EthAddress from './EthAddress';
 import Breadcrumbs from '@material-ui/lab/Breadcrumbs';
 
-class Delegation extends React.Component {
+class DelegationUI extends React.Component {
 	static propTypes = {
 		className: PropTypes.string,
         Delegation: PropTypes.object.isRequired,
@@ -17,33 +17,45 @@ class Delegation extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-            delegation = [],
-            editDelegate = null,
-            editDelegation = [],
+            delegation: [],
+            delegateChain: [],
+            editDelegate: null,
+            editDelegation: [],
 
 		};
 	}
 
 
 	componentDidMount() {
-        this.delegationOf(this.props.account);
+        this.delegateChainOf(this.props.account);
     }
 
 
-    delegationOf(delegate) {
-        const delegation = this.state.delegation;
-        if(!delegation.includes(delegate)){
-            delegation.push(delegate);
-            this.setState({delegation});
+    delegation() {
+        const delegateChain = this.state.delegateChain;
+        if(!delegateChain.includes(delegate)){
+            delegateChain.push(delegate);
+            this.setState({delegateChain});
             this.props.Delegation.methods.delegatedTo(delegate).then((delegatedTo) => {
-                this.delegationOf(delegatedTo);
+                this.delegateChainOf(delegatedTo);
+            });
+        }
+    }
+
+    delegateChainOf(delegate) {
+        const delegateChain = this.state.delegateChain;
+        if(!delegateChain.includes(delegate)){
+            delegateChain.push(delegate);
+            this.setState({delegateChain});
+            this.props.Delegation.methods.delegatedTo(delegate).then((delegatedTo) => {
+                this.delegateChainOf(delegatedTo);
             });
         }
     }
 
     editDelegationOf(delegate) {
-        const delegation = this.state.editDelegation;
-        if(!delegation.includes(delegate)){
+        const delegateChain = this.state.editDelegation;
+        if(!delegateChain.includes(delegate)){
             editDelegation.push(delegate);
             this.setState({editDelegation});
             this.props.Delegation.methods.delegatedTo(delegate).then((delegatedTo) => {
@@ -59,31 +71,30 @@ class Delegation extends React.Component {
             Delegation,
 			className,
 		} = this.props;
-        const { delegation, editDelegate } = this.state;
+        const { delegateChain, editDelegate } = this.state;
         
 		return (
 			<div className={className} >
                 <div>
-                    <p>Delegation Address:</p>
+                    <p>Delegation:</p>
                     <EthAddress value={Delegation.options.address} />
                 </div>
-
-
                 <div>
-                    <small>Current delegation:</small>
+                    <small>Delegate Chain:</small>
                     <Breadcrumbs arial-label="Breadcrumb" maxItems={5}>
                     {
-                        delegation.map((value) => {
+                        delegateChain.map((value) => {
                             return <EthAddress value={value} />
                         })
                     }
                     </Breadcrumbs>
                 </div>
                 <div>
-                    <p>Set Delegate:</p>
-                    <EthAddress defaultValue={delegation[0]} control={true} onChange={(editDelegate) => {
+                    <p>Delegate Set</p>
+                    <EthAddress defaultValue={delegateChain[0]} control={true} onChange={(editDelegate) => {
                         this.setState({editDelegate});
-                        if(editDelegate != delegation[0]) {
+                        if(editDelegate != delegateChain[0]) {
+                            this.setState({editDelegation : []});
                             this.editDelegationOf(editDelegate);
                         }
                     }} />
@@ -98,10 +109,11 @@ class Delegation extends React.Component {
                         </Breadcrumbs>
                     }
                 </div>
+
 			</div>
 		)
 	}
 	
 }
 
-export default Delegation;
+export default DelegationUI;
