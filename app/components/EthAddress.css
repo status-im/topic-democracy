@@ -1,12 +1,12 @@
 .eth-address {
     padding: 3px;
-    border-radius: 8px;
-    position: relative;
     display: inline-grid;
+    min-width: 170px;
+    border-radius: 8px;
     box-shadow: 1px 1px 1px 1px #CCC;
     border-top: solid 1px #FFF;
     border-left: solid 1px #FFF;
-    margin: -2px 0 0 0;
+    margin: auto;
   }
   
   .eth-address .blocky .identicon {
@@ -14,63 +14,63 @@
     margin-right: 10px;
   }
   
-  .eth-address .address-err, 
-  .eth-address .address-bg {
+  .eth-address .err, 
+  .eth-address .bg {
     border-radius: 8px;
     display: flex;
     overflow: hidden;
   }
   
-  .eth-address .address-bg {
+  .eth-address .bg {
     background-color:#FFF;
   }
   
-  .eth-address .address-err {
+  .eth-address .err {
     background-color:#f8d7da;
   }
   
-  .eth-address .address-text {
+  .eth-address .text {
     color: #808080;
   }
   
-  .eth-address .address-indicator,
-  .eth-address .address-control
+  .eth-address .indicator,
+  .eth-address .control
   {
     color: #000;
     padding-right: 8px;
   }
   
-  .eth-address .address-indicator,
-  .eth-address .address-control,
-  .eth-address .address-text {
+  .eth-address .indicator,
+  .eth-address .control,
+  .eth-address .text {
     overflow: hidden;
     margin: auto;
   }
   
-  .eth-address .address-indicator,
-  .eth-address .address-text {
+  .eth-address .indicator,
+  .eth-address .text {
     display: flex;
   }
   
-  .eth-address .address-control {
+  .eth-address .control {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
     display: none;
   }
   
-  .eth-address:focus-within .address-control,
-  .eth-address:hover .address-control {
+  .eth-address:focus-within .control,
+  .eth-address:hover .control {
     display: flow-root;
   }
   
-  .eth-address:focus-within .address-indicator,
-  .eth-address:hover .address-indicator {
+  .eth-address:focus-within .indicator,
+  .eth-address:hover .indicator {
     display: none;
   }
   
-  .eth-address .address-indicator small, 
-  .eth-address .address-text small {
+  .eth-address .indicator small, 
+  .eth-address .text small {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
