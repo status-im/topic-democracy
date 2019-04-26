@@ -18,7 +18,7 @@ class EthAddress extends React.Component {
 	};
 
 	static defaultProps = {
-		className: 'text-monospace eth-address',
+		className: 'eth-address',
 		defaultValue: "0x0000000000000000000000000000000000000000",
 		colors: true,
 		control: false,
