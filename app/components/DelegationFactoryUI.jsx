@@ -24,20 +24,6 @@ const zeroIfNull = (address) => {
     return address ? address : "0x0000000000000000000000000000000000000000"
 }
 
-const sendTransaction = (parent, controller, defaultDelegate) => {
-    try {
-        return (!controller && !defaultDelegate) ?
-            DelegationFactory.methods.createDelegation(zeroIfNull(parent)) :
-            DelegationFactory.methods.createDelegation(
-                zeroIfNull(parent),
-                zeroIfNull(controller),
-                zeroIfNull(defaultDelegate)
-                )
-    } catch(e) {
-        return null;
-    }
-    
-}
 
 class DelegationFactoryUI extends React.Component {
     
@@ -45,7 +31,7 @@ class DelegationFactoryUI extends React.Component {
         super(props);
         this.state = {
             parent: null,
-            controller: null,
+            controller: props.account,
             defaultDelegate: null
         };
     }
@@ -53,7 +39,7 @@ class DelegationFactoryUI extends React.Component {
     render() {
         const { classes, account } = this.props;
         const { parent, controller, defaultDelegate } = this.state;
-        const tx = sendTransaction(parent,controller,defaultDelegate);
+        console.log(parent, controller, defaultDelegate);
         return (
             <Paper className={classes.paper}>
                 <Grid container spacing={16}>
@@ -71,12 +57,17 @@ class DelegationFactoryUI extends React.Component {
                     </Grid> 
                     <Grid item>
                         <TransactionSendButton 
-                            sendTransaction={tx}
-                            disabled={!tx}
+                            sendTransaction={(!controller && !defaultDelegate) ?
+                                DelegationFactory.methods.createDelegation(parent) :
+                                DelegationFactory.methods.createDelegation(
+                                    parent,
+                                    controller,
+                                    defaultDelegate
+                                    )}
                             account={account}
                             text="Deploy Delegation"
                             onSend={(txHash) => {console.log("txHash",txHash)}}
-                            onResult={(result) => {console.log("result",result)}}
+                            onResult={(result) => {console.log("result",result.events)}}
                             onReceipt={(receipt) => {console.log("receipt",receipt)}}
                             onError={(error) => {console.log("error",error)}}
                         />
