@@ -46,7 +46,7 @@ class EthAddress extends React.Component {
 	componentDidUpdate(prevProps, prevState) {
         if (prevProps.value != this.props.value && this.props.value != this.state.value) {
             this.setState({value: this.props.value});
-        }
+		}
     }
 
     onKeyPress(event) {
@@ -101,7 +101,7 @@ class EthAddress extends React.Component {
 			blockyScale,
 			control
 		} = this.props;
-		const { value } = this.state;
+		const value = this.state.value ? this.state.value : "0x0000000000000000000000000000000000000000";
 		let valid = /^(0x)?[0-9a-f]{40}$/i.test(value);
 		const colorStyle = colors && valid ? {
 			backgroundImage: `linear-gradient(90deg, #${value.substr(6, 6)} 0% 15%, #${value.substr(12, 6)} 17% 32%, #${value.substr(18, 6)} 34% 49%, #${value.substr(24, 6)} 51% 66%, #${value.substr(30, 6)} 68% 83%, #${value.substr(36, 6)} 85% 100%)`
