@@ -73,11 +73,11 @@ class TopicDemocracy extends React.Component {
           </Toolbar>
         </AppBar>
         <main className={classes.layout}>
-          <Route exact path="/" render={(match) => (
+          <Route exact path="/" render={({ match }) => (
             <DelegationFactoryUI  account={defaultAccount} />
           )} />
-          <Route path="/:address" render={(match) => (
-            <DelegationUI account={defaultAccount} Delegation={new EmbarkJS.Blockchain.Contract({ abi: Delegation._jsonInterface, address: match.param.address }) } />
+          <Route path="/:address" render={({ match }) => (
+            <DelegationUI account={defaultAccount} Delegation={new EmbarkJS.Blockchain.Contract({ abi: Delegation._jsonInterface, address: match.params.address }) } />
           )} />
         </main>
       </HashRouter>

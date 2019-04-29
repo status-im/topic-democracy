@@ -17,7 +17,7 @@ class DelegationUI extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-            delegation: [],
+            delegate: null,
             delegateChain: [],
             editDelegate: null,
             editDelegation: [],
@@ -36,7 +36,7 @@ class DelegationUI extends React.Component {
         if(!delegateChain.includes(delegate)){
             delegateChain.push(delegate);
             this.setState({delegateChain});
-            this.props.Delegation.methods.delegatedTo(delegate).then((delegatedTo) => {
+            this.props.Delegation.methods.delegatedTo(delegate).call().then((delegatedTo) => {
                 this.delegateChainOf(delegatedTo);
             });
         }
@@ -47,18 +47,18 @@ class DelegationUI extends React.Component {
         if(!delegateChain.includes(delegate)){
             delegateChain.push(delegate);
             this.setState({delegateChain});
-            this.props.Delegation.methods.delegatedTo(delegate).then((delegatedTo) => {
+            this.props.Delegation.methods.delegatedTo(delegate).call().then((delegatedTo) => {
                 this.delegateChainOf(delegatedTo);
             });
         }
     }
 
     editDelegationOf(delegate) {
-        const delegateChain = this.state.editDelegation;
+        const editDelegation = this.state.editDelegation;
         if(!delegateChain.includes(delegate)){
             editDelegation.push(delegate);
             this.setState({editDelegation});
-            this.props.Delegation.methods.delegatedTo(delegate).then((delegatedTo) => {
+            this.props.Delegation.methods.delegatedTo(delegate).call().then((delegatedTo) => {
                 this.editDelegationOf(delegatedTo);
             });
         }
@@ -71,7 +71,7 @@ class DelegationUI extends React.Component {
             Delegation,
 			className,
 		} = this.props;
-        const { delegateChain, editDelegate } = this.state;
+        const {delegate, delegateChain,  editDelegate, editDelegation } = this.state;
         
 		return (
 			<div className={className} >
@@ -83,15 +83,15 @@ class DelegationUI extends React.Component {
                     <small>Delegate Chain:</small>
                     <Breadcrumbs arial-label="Breadcrumb" maxItems={5}>
                     {
-                        delegateChain.map((value) => {
-                            return <EthAddress value={value} />
+                        delegateChain.map((value, i) => {
+                            return <EthAddress key={i} value={value} />
                         })
                     }
                     </Breadcrumbs>
                 </div>
                 <div>
                     <p>Delegate Set</p>
-                    <EthAddress defaultValue={delegateChain[0]} control={true} onChange={(editDelegate) => {
+                    <EthAddress defaultValue={editDelegate} control={true} onChange={(editDelegate) => {
                         this.setState({editDelegate});
                         if(editDelegate != delegateChain[0]) {
                             this.setState({editDelegation : []});
