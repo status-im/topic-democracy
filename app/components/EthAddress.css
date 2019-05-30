@@ -1,80 +1,109 @@
 .eth-address {
-    padding: 3px;
-    display: inline-grid;
-    min-width: 170px;
-    border-radius: 8px;
-    box-shadow: 1px 1px 1px 1px #CCC;
-    border-top: solid 1px #FFF;
-    border-left: solid 1px #FFF;
-    margin: auto;
-    font-family: monospace;
-  }
-  
-  .eth-address .blocky .identicon {
-    border-radius: 0 8px 8px 0;
-    margin-right: 10px;
-  }
-  
-  .eth-address .err, 
-  .eth-address .bg {
-    border-radius: 8px;
-    display: flex;
-    overflow: hidden;
-  }
-  
-  .eth-address .bg {
-    background-color:#FFF;
-  }
-  
-  .eth-address .err {
-    background-color:#f8d7da;
-  }
-  
-  .eth-address .text {
-    color: #808080;
-  }
-  
-  .eth-address .indicator,
-  .eth-address .control
-  {
-    color: #000;
-    padding-right: 8px;
-  }
-  
-  .eth-address .indicator,
-  .eth-address .control,
-  .eth-address .text {
-    overflow: hidden;
-    margin: auto;
-  }
-  
-  .eth-address .indicator,
-  .eth-address .text {
-    display: flex;
-  }
-  
-  .eth-address .control {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    display: none;
-  }
-  
-  .eth-address:focus-within .control,
-  .eth-address:hover .control {
-    display: flow-root;
-  }
-  
-  .eth-address:focus-within .indicator,
-  .eth-address:hover .indicator {
-    display: none;
-  }
-  
-  .eth-address .indicator small, 
-  .eth-address .text small {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    display: flow-root;
-    margin-top: 0.25em;
-  }
+  padding: 3px;
+  display: inline-grid;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 2em;
+  box-shadow: 1px 1px 1px 1px #CCC;
+  border-top: solid 1px #FFF;
+  border-left: solid 1px #FFF;
+  margin: auto;
+  font-family: monospace;
+}
+
+.eth-address .blocky  {
+  border-radius: 2em;
+}
+
+.eth-address .err, 
+.eth-address .bg {
+  min-height: 32px;
+  border-radius: 8em;
+  display: flex;
+  overflow: hidden;
+}
+
+.eth-address .bg {
+  background-color:#FFF;
+}
+
+.err {
+  background-color:#f8d7da;
+}
+
+.eth-address .text {
+  color: #808080;
+}
+
+.eth-address .indicator,
+.eth-address .control
+{
+  color: #000;
+}
+
+.eth-address .indicator,
+.eth-address .control,
+.eth-address .text {
+  padding-right: 8px;
+  padding-left: 8px;
+  overflow: hidden;
+  margin: auto;
+}
+
+.eth-address .indicator,
+.eth-address .text {
+  cursor: pointer;
+}
+
+.eth-address .indicator span,
+.eth-address .text span {
+  display: flex;
+}
+
+.eth-address .control {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width:100%;
+  display: none;
+}
+
+.eth-address:focus-within .control,
+.eth-address:hover .control {
+  display: block;
+}
+
+.eth-address:focus-within .indicator,
+.eth-address:hover .indicator {
+  display: none;
+}
+
+.eth-address .indicator small, 
+.eth-address .text small {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: flow-root;
+  margin-top: 0.25em;
+}
+
+.eth-address .clip-icon .svg-icon path {
+  fill:#000;
+}
+.eth-address .clip-icon {
+  margin: auto 4px auto -4px;
+  display: none;
+}
+
+.eth-address:hover .clip-icon {
+  display: inline-block;
+}
+.eth-address .text span,
+.eth-address .indicator span {
+  margin: -4px auto;
+}
+
+.eth-address .ens-reverse small {
+  margin-top: 0;
+  margin-bottom: -0.25em;
+}
