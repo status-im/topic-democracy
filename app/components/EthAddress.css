@@ -1,24 +1,31 @@
+[contenteditable=true]:empty:before {
+  content: attr(placeholder);
+  display: block; /* For Firefox */
+  color: #888;
+}
+
 .eth-address {
   padding: 3px;
+  position: relative;
   display: inline-grid;
   width: 100%;
-  max-width: 420px;
-  border-radius: 2em;
-  box-shadow: 1px 1px 1px 1px #CCC;
-  border-top: solid 1px #FFF;
-  border-left: solid 1px #FFF;
+  max-width: 368px;
+  border-radius: 5px;
   margin: auto;
+}
+
+.hex {
   font-family: monospace;
 }
 
 .eth-address .blocky  {
-  border-radius: 2em;
+
 }
 
 .eth-address .err, 
 .eth-address .bg {
   min-height: 32px;
-  border-radius: 8em;
+  border-radius: 5px;
   display: flex;
   overflow: hidden;
 }
@@ -38,16 +45,15 @@
 .eth-address .indicator,
 .eth-address .control
 {
-  color: #000;
+  color: #000;  
 }
 
 .eth-address .indicator,
 .eth-address .control,
 .eth-address .text {
-  padding-right: 8px;
-  padding-left: 8px;
+  margin: auto 8px;
   overflow: hidden;
-  margin: auto;
+  
 }
 
 .eth-address .indicator,
@@ -64,17 +70,23 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  width:100%;
+  width: 100%;
   display: none;
+  background: none;
+  border: none;
 }
 
-.eth-address:focus-within .control,
-.eth-address:hover .control {
+.eth-address .err:hover .control,
+.eth-address .err:focus-within .control,
+.eth-address .bg:focus-within .control,
+.eth-address .bg:hover .control {
   display: block;
 }
 
-.eth-address:focus-within .indicator,
-.eth-address:hover .indicator {
+.eth-address .err:hover .indicator,
+.eth-address .err:focus-within .indicator,
+.eth-address .bg:focus-within .indicator,
+.eth-address .bg:hover .indicator {
   display: none;
 }
 
@@ -84,7 +96,7 @@
   white-space: nowrap;
   overflow: hidden;
   display: flow-root;
-  margin-top: 0.25em;
+  margin-top: 2px;
 }
 
 .eth-address .clip-icon .svg-icon path {
@@ -100,10 +112,40 @@
 }
 .eth-address .text span,
 .eth-address .indicator span {
-  margin: -4px auto;
+  margin: -2px auto;
 }
 
 .eth-address .ens-reverse small {
   margin-top: 0;
   margin-bottom: -0.25em;
+}
+
+.eth-address .menu {
+  background-color: #FFF;
+  position: absolute;
+  display: grid;
+
+  border: solid 1px #999;
+  z-index: 999;
+  top: 35px;
+  right: 3px;
+  border-radius: 0.25em;
+}
+.eth-address .menu a {
+  padding: 2px 15px;
+}
+.eth-address .menu a:hover {
+  cursor: pointer;
+  background-color: #CCC;
+}
+.eth-address .more-icon {
+  margin: 6px 5px 0 0;
+}
+
+.eth-address .more-icon path{
+  fill: #000;
+}
+
+.eth-address .loading {
+  margin: 8px;
 }

@@ -1,0 +1,52 @@
+.hexdata {
+   font-size: 15px;
+   color: #000;
+   font-family: monospace;
+   display: inline-block;
+}
+
+.hexdata .ascii {
+    color: #555;
+    display: none;
+}
+
+.hexdata div.hex-head {
+    font-size: .8em;
+    display: inline-block;
+}
+
+.hexdata div.hex-sets {
+    display: inline;
+}
+
+
+.hexdata .none {
+    visibility: hidden;
+}
+
+.hexdata ul.setAscii, .hexdata ul.setHex {
+    word-break: keep-all;
+    display: inline-block;
+    margin:0;
+    padding:0;
+    text-align:center;
+}
+
+.hexdata ul.setAscii li, .hexdata ul.setHex li {
+    margin:0;
+    padding:0;
+    display: inline-block;
+    width: 1.5em;
+}
+
+.hexdata ul.setAscii.active,
+.hexdata ul.setHex.active {
+    color: green;
+}
+
+.hexdata ul.setAscii li.active,
+.hexdata ul.setHex li.active {
+    font-weight:bold;
+    color: white;
+    background-color: green;
+} 

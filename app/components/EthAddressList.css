@@ -1,0 +1,8 @@
+.eth-address-list .new-item  {
+    opacity: 0.5;
+}
+
+.eth-address-list .new-item:hover,
+.eth-address-list .new-item:focus-within {
+    opacity: 1;
+}

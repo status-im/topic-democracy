@@ -1,0 +1,13 @@
+.eth-calldata ul {
+    list-style: none;
+    padding: 0;
+}
+.eth-calldata .eth-sig {
+    font-family: monospace;
+}
+
+.eth-calldata .eth-sig .sig-head {
+    font-size: 0.8em;
+    display: inline-block;
+    padding-left: 1px;
+}
