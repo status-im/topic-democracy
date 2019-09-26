@@ -1,6 +1,10 @@
 # Topic Democracy
 A liquid democracy of topics with a hierarchy of delegates.
 
+## Core concepts
+Topic Democracy enables users to set delegates and vote in proposals, by sending their signature in a specific status.im #channels, volunteers can include all signatures in one transaction near voting period end. 
+Proposals are first voted by users and later tabulated, only if an inchain consequence i
+
 ### Delegative
 Vote influence can be delegated through a hierarchical trust network of specialized delegates.
 
@@ -51,6 +55,53 @@ Anyone can be a volunteer to include merkle root of voters signatures in the pro
 - Voters should wait for volunteer merkle proof response and verify vote inclusion.
 Gas intense operations are done in tabulation, using signatures and merkle proofs provided by volunteers or collected from whisper channels. 
 The tabulation extends the finalization block at every tabulation. 
+
+## Tabulation methods:
+
+Enforced:
+Cannot accumulate votes towards decision, i.e. votes must always be tabulated against winning position. Used for `Simple Quorum Approve/Reprove` gas economy.
+
+Free:
+Any vote can be tabulated and is interest of participants or proponent in paying for this processing.
+
+## Proposal Types
+
+### 1. Execution Proposal
+- Single Option Approve/Reprove
+- Liquid Democracy
+- Absolute Quorum
+- Default Delegation might enabled for specific topics
+- Vetoable
+
+Tabulation method: Free 
+
+### 2. Election Proposal
+- Competition Style, most voted win
+- Might have multiple winners, list would output in asc order of most voted
+- Linked lists build ranking
+- Liquid Democracy
+- Default delegation is always disabled 
+
+Tabulation method: Free (it's participants or proponent interest in pay for tabulation)
+
+### 3. Crowdsource Proposal
+- Multiple Option Approve/Reproval; 
+- Custom Options; 
+- Simple Quorum.
+- Viscous Democracy after first layer
+- Default delegation is always disabled 
+
+Users holding SNT can voice their opinion using status API in channel: #democracy-[proposalid]
+Options can be suggested without SNT through Status API in channel: #democracy-[proposalid]
+Options can be commented on without SNT through Status API in channel #democracy-[proposalId]-[SuggestionDataHash]
+
+Signatures are grathered from Status.im Mailserv
+Gas is paid by proponent at execution phase, if inchain actions are needed upon this. 
+
+Tabulation method: 
+1. Enforced (Dispute): Cannot accumulate positive votes; or
+2. Free
+
 
 ## Running
 Requires `geth` command available in $PATH for npm start
