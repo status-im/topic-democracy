@@ -74,10 +74,6 @@ Every address have a delegate, which by default is address `0x000000000000000000
 For root delegation, the default delegate (`0x0000000000000000000000000000000000000000`) always delegates to `0x0000000000000000000000000000000000000000`, but for sub delegations it may delegate to another address (defined by the sub delegation), which becomes the default delegatee of that sub democracy.  
 When an address defines the delegate to itself, it means an delegation endpoint (equivalent to "not having a delegate"), but in practice is a ciruclar delegation to itself.
 
-
-### Gasless voting
-
-
 ### Proposal Types
 
 Initially it would be implemented 3 types of proposals:
