@@ -1,4 +1,5 @@
-pragma solidity >=0.5.0 <0.6.0;
+// SPDX-License-Identifier: CC0-1.0
+pragma solidity >=0.6.0 <0.8.0;
 
 /**
  * @title InstanceAbstract
@@ -7,9 +8,9 @@ pragma solidity >=0.5.0 <0.6.0;
  *      Important to avoid overwriting wrong storage pointers is that 
  *      InstanceAbstract should be always the first contract at heritance.
  */
-contract InstanceAbstract {    
+abstract contract InstanceAbstract {    
     // protected zone start (InstanceAbstract vars)
     InstanceAbstract public base;
     // protected zone end
-    constructor() internal { }
+    constructor() { }
 }

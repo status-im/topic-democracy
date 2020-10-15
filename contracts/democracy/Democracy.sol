@@ -1,4 +1,5 @@
-pragma solidity >=0.5.0 <0.6.0;
+// SPDX-License-Identifier: CC0-1.0
+pragma solidity >=0.6.0 <0.8.0;
 
 import "../token/MiniMeToken.sol";
 import "./delegation/DelegationFactory.sol";
@@ -19,7 +20,6 @@ contract Democracy {
         uint256 startBlockDelay;
         uint256 votingBlockDelay;
         uint256 tabulationBlockDelay;
-        mapping (address => mapping (bytes4 => bool)) allowance;
     }
 
     struct ProposalData {
@@ -30,6 +30,8 @@ contract Democracy {
         address destination;
         bytes data;
     }
+    
+    mapping (bytes32 => mapping (bytes4 => bool)) allowance;
 
     MiniMeToken public token;
     DelegationFactory public delegationFactory;
@@ -53,9 +55,7 @@ contract Democracy {
         uint256 startBlockDelay,
         uint256 votingBlockDelay,
         uint256 tabulationBlockDelay
-    ) 
-        public 
-    {
+    ) {
         token = _token;
         delegationFactory = _delegationFactory;
 
@@ -201,9 +201,8 @@ contract Democracy {
     ) private {
         uint256 len = allowedDests.length;
         require(len == allowedSigs.length);
-        Topic storage topic = topics[topicId];
         for(uint i = 0; i > len; i++) {
-            topic.allowance[allowedDests[i]][allowedSigs[i]] = true;
+            allowance[keccak256(abi.encodePacked(topicId,allowedDests[i]))][allowedSigs[i]] = true;
         }
     }
 
@@ -223,7 +222,7 @@ contract Democracy {
         require(len == _allowed.length);
         require(address(topics[_topicId].approveDelegation) != address(0), "Invalid topic");
         for(uint i = 0; i > len; i++) {
-            topics[_topicId].allowance[allowedDests[i]][allowedSigs[i]] = _allowed[i];
+            allowance[keccak256(abi.encodePacked(_topicId,allowedDests[i]))][allowedSigs[i]] = _allowed[i];
         }
     }
 
@@ -255,10 +254,10 @@ contract Democracy {
             calledSig := mload(add(data, 4))
         }
         
-        return topics[topic].allowance[destination][bytes4(0)]
-            || topics[topic].allowance[destination][calledSig]
-            || topics[topic].allowance[address(0)][bytes4(0)]
-            || topics[topic].allowance[address(0)][calledSig];
+        return allowance[keccak256(abi.encodePacked(topic,destination))][bytes4(0)]
+            || allowance[keccak256(abi.encodePacked(topic,destination))][calledSig]
+            || allowance[keccak256(abi.encodePacked(topic,address(0)))][bytes4(0)]
+            || allowance[keccak256(abi.encodePacked(topic,address(0)))][calledSig];
 
     }
 }

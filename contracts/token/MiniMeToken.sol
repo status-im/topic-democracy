@@ -1,21 +1,6 @@
-pragma solidity >=0.5.0 <0.6.0;
+// SPDX-License-Identifier: GPL-3.0-or-later
+pragma solidity >=0.6.0 <0.8.0;
 
-/*
-    Copyright 2016, Jordi Baylina
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 /**
  * @title MiniMeToken Contract
  * @author Jordi Baylina
@@ -111,9 +96,7 @@ contract MiniMeToken is Controlled {
         uint8 _decimalUnits,
         string memory _tokenSymbol,
         bool _transfersEnabled
-    ) 
-        public
-    {
+    ) {
         tokenFactory = MiniMeTokenFactory(_tokenFactory);
         name = _tokenName;                                 // Set the name
         decimals = _decimalUnits;                          // Set the decimals
@@ -133,7 +116,7 @@ contract MiniMeToken is Controlled {
      * @notice Send `_amount` tokens to `_to` from `msg.sender`
      * @param _to The address of the recipient
      * @param _amount The amount of tokens to be transferred
-     * @return Whether the transfer was successful or not
+     * @return success Whether the transfer was successful or not
      */
     function transfer(address _to, uint256 _amount) public returns (bool success) {
         require(transfersEnabled, "Transfers disabled");
@@ -146,7 +129,7 @@ contract MiniMeToken is Controlled {
      * @param _from The address holding the tokens being transferred
      * @param _to The address of the recipient
      * @param _amount The amount of tokens to be transferred
-     * @return True if the transfer was successful
+     * @return success True if the transfer was successful
      */
     function transferFrom(
         address _from,
@@ -255,7 +238,7 @@ contract MiniMeToken is Controlled {
 
     /**
      * @param _owner The address that's balance is being requested
-     * @return The balance of `_owner` at the current block
+     * @return balance The balance of `_owner` at the current block
      */
     function balanceOf(address _owner) external view returns (uint256 balance) {
         return balanceOfAt(_owner, block.number);
@@ -267,7 +250,7 @@ contract MiniMeToken is Controlled {
      *  to be a little bit safer
      * @param _spender The address of the account able to transfer the tokens
      * @param _amount The amount of tokens to be approved for transfer
-     * @return True if the approval was successful
+     * @return success True if the approval was successful
      */
     function approve(address _spender, uint256 _amount) external returns (bool success) {
         return doApprove(msg.sender, _spender, _amount);
@@ -277,7 +260,7 @@ contract MiniMeToken is Controlled {
      * @dev This function makes it easy to read the `allowed[]` map
      * @param _owner The address of the account that owns the token
      * @param _spender The address of the account able to transfer the tokens
-     * @return Amount of remaining tokens of _owner that _spender is allowed
+     * @return remaining Amount of remaining tokens of _owner that _spender is allowed
      *  to spend
      */
     function allowance(
@@ -297,7 +280,7 @@ contract MiniMeToken is Controlled {
      *  interact with contracts in one function call instead of two
      * @param _spender The address of the contract able to transfer the tokens
      * @param _amount The amount of tokens to be approved for transfer
-     * @return True if the function call was successful
+     * @return success True if the function call was successful
      */
     function approveAndCall(
         address _spender,
@@ -553,9 +536,7 @@ contract MiniMeToken is Controlled {
      */
     function updateValueAtNow(Checkpoint[] storage checkpoints, uint _value) internal {
         if ((checkpoints.length == 0) || (checkpoints[checkpoints.length -1].fromBlock < block.number)) {
-            Checkpoint storage newCheckPoint = checkpoints[checkpoints.length++];
-            newCheckPoint.fromBlock = uint128(block.number);
-            newCheckPoint.value = uint128(_value);
+            checkpoints.push(Checkpoint(uint128(block.number), uint128(_value)));
         } else {
             Checkpoint storage oldCheckPoint = checkpoints[checkpoints.length-1];
             oldCheckPoint.value = uint128(_value);
@@ -590,9 +571,9 @@ contract MiniMeToken is Controlled {
      *  set to 0, then the `proxyPayment` method is called which relays the
      *  ether and creates tokens as described in the token controller contract
      */
-    function () external payable {
+    fallback() external payable {
         require(isContract(controller), "Deposit unallowed");
-        require(TokenController(controller).proxyPayment.value(msg.value)(msg.sender), "Deposit denied");
+        require(TokenController(controller).proxyPayment{value:msg.value}(msg.sender), "Deposit denied");
     }
 
 //////////

@@ -1,4 +1,5 @@
-pragma solidity >=0.5.0 <0.6.0;
+// SPDX-License-Identifier: CC0-1.0
+pragma solidity >=0.6.0 <0.8.0;
 
 import "../../deploy/InstanceAbstract.sol";
 import "../../common/Controlled.sol";
@@ -8,7 +9,7 @@ import "./Delegation.sol";
  * @title DelegationAbstract
  * @author Ricardo Guilherme Schmidt (Status Research & Development GmbH). 
  */
-contract DelegationAbstract is InstanceAbstract, Controlled, Delegation {
+abstract contract DelegationAbstract is InstanceAbstract, Controlled, Delegation {
     struct DelegateSet {
         uint96 fromBlock; //when this was updated
         address to; //who recieved this delegaton
@@ -20,7 +21,7 @@ contract DelegationAbstract is InstanceAbstract, Controlled, Delegation {
     mapping (address => DelegateSet[]) public delegations;
 
 
-    constructor() internal {
+    constructor() {
 
     }
 
@@ -47,7 +48,7 @@ contract DelegationAbstract is InstanceAbstract, Controlled, Delegation {
       * @dev `_getDelegationAt` retrieves the delegation at a given block number.
       * @param checkpoints The memory being queried.
       * @param _block The block number to retrieve the value at.
-      * @return The delegation being queried.
+      * @return d The delegation being queried.
       */
     function getMemoryAt(DelegateSet[] storage checkpoints, uint _block) internal view returns (DelegateSet memory d) {
         // Case last checkpoint is the one;
@@ -74,7 +75,7 @@ contract DelegationAbstract is InstanceAbstract, Controlled, Delegation {
      *         or from parent level if `_who` never defined/defined to parent address.
      * @param _who What address to lookup.
      * @param _block Block number of what height in history.
-     * @return The address `_who` choosen delegate to.
+     * @return directDelegate address `_who` choosen delegate to.
      */
     function findDelegatedToAt(
         address _who,

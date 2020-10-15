@@ -1,4 +1,5 @@
-pragma solidity >=0.5.0 <0.6.0;
+// SPDX-License-Identifier: GPL-3.0-or-later
+pragma solidity >=0.6.0 <0.8.0;
 
 import "./StatusNetwork.sol";
 /**
@@ -15,12 +16,11 @@ contract TestStatusNetwork is StatusNetwork {
      * @param _owner Authority address
      * @param _snt SNT token
      */
-    constructor(address payable _owner, MiniMeToken _snt) 
-        public 
+    constructor(address payable _owner, MiniMeToken _snt)
         StatusNetwork(_owner, _snt)
     { }
 
-    function () external {
+    fallback() external {
         _generateTokens(msg.sender, 1000 * (10 ** uint(snt.decimals())));
     }
     

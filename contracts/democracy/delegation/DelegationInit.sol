@@ -1,4 +1,5 @@
-pragma solidity >=0.5.0 <0.6.0;
+// SPDX-License-Identifier: CC0-1.0
+pragma solidity >=0.6.0 <0.8.0;
 
 import "./DelegationAbstract.sol";
 
@@ -22,7 +23,7 @@ contract DelegationInit is DelegationAbstract {
     /**
      * @notice Constructor of the model
      */
-    constructor() public {
+    constructor() {
         parentDelegation = Delegation(address(-1)); //avoids calling create delegation within the Init contract.
     }
 
@@ -47,8 +48,8 @@ contract DelegationInit is DelegationAbstract {
         updateDelegate(address(0), _defaultDelegate);
     }
     
-    function delegate(address) external notImplemented {}
-    function delegatedTo(address) external view notImplemented returns (address) {}  
-    function delegatedToAt(address,uint) external view notImplemented returns (address) {}
+    function delegate(address) override external notImplemented {}
+    function delegatedTo(address) override external view notImplemented returns (address) {}  
+    function delegatedToAt(address,uint) override external view notImplemented returns (address) {}
     
 }

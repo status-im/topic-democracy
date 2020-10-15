@@ -1,8 +1,9 @@
-pragma solidity >=0.5.0 <0.6.0;
+// SPDX-License-Identifier: CC0-1.0
+pragma solidity >=0.6.0 <0.8.0;
 
 /// @dev `Owned` is a base level contract that assigns an `owner` that can be
 ///  later changed
-contract Owned {
+abstract contract Owned {
 
     /// @dev `owner` is the only address that can call a function with this
     /// modifier
@@ -14,7 +15,7 @@ contract Owned {
     address payable public owner;
 
     /// @notice The Constructor assigns the message sender to be `owner`
-    constructor() internal {
+    constructor() {
         owner = msg.sender;
     }
 

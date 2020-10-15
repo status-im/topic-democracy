@@ -1,4 +1,5 @@
-pragma solidity >=0.5.0 <0.6.0;
+// SPDX-License-Identifier: CC0-1.0
+pragma solidity >=0.6.0 <0.8.0;
 
 import "./InstanceAbstract.sol";
 import "./DelegatedCall.sol";
@@ -20,8 +21,7 @@ contract Instance is InstanceAbstract, DelegatedCall {
         InstanceAbstract _base,
         InstanceAbstract _init,
         bytes memory _initMsg
-    ) 
-        public 
+    )
         payable
         DelegatedCall(address(_init), _initMsg)
     {
@@ -32,7 +32,7 @@ contract Instance is InstanceAbstract, DelegatedCall {
      * @dev delegatecall everything (but declared functions) to `_target()`
      * @notice Verify `base()` code to predict behavior
      */
-    function () 
+    fallback()  
         external 
         payable 
         delegateAndReturn(address(base)) 

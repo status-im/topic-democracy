@@ -1,4 +1,5 @@
-pragma solidity >=0.5.0 <0.6.0;
+// SPDX-License-Identifier: CC0-1.0
+pragma solidity >=0.6.0 <0.8.0;
 
 import "./ERC20Token.sol";
 
@@ -9,7 +10,7 @@ contract ERC20Receiver {
 
     mapping (address => mapping(address => uint256)) tokenBalances;
 
-    constructor() public {
+    constructor() {
         
     }
 

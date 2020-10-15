@@ -1,4 +1,5 @@
-pragma solidity >=0.5.0 <0.6.0;
+// SPDX-License-Identifier: GPL-3.0-or-later
+pragma solidity >=0.6.0 <0.8.0;
 
 import "../token/TokenController.sol";
 import "../common/Owned.sol";
@@ -21,7 +22,7 @@ contract SNTController is TokenController, Owned {
      * @param _owner Authority address
      * @param _snt SNT token
      */
-    constructor(address payable _owner, MiniMeToken _snt) internal {
+    constructor(address payable _owner, MiniMeToken _snt) {
         if(_owner != address(0)){
             owner = _owner;
         }
@@ -48,7 +49,7 @@ contract SNTController is TokenController, Owned {
             snt.claimTokens(_token);
         }
         if (_token == address(0)) {
-            address(owner).transfer(address(this).balance);
+            owner.transfer(address(this).balance);
             return;
         }
 
@@ -62,7 +63,7 @@ contract SNTController is TokenController, Owned {
      * @notice payment by address coming from controlled token
      * @dev In between the offering and the network. Default settings for allowing token transfers. 
      */
-    function proxyPayment(address) external payable returns (bool) {
+    function proxyPayment(address) override external payable returns (bool) {
         //Uncomment above line when using parameters
         //require(msg.sender == address(snt), "Unauthorized");
         return false;
@@ -72,7 +73,7 @@ contract SNTController is TokenController, Owned {
      * @notice register and authorizes transfer from token
      * @dev called by snt when a transfer is made
      */
-    function onTransfer(address, address, uint256) external returns (bool) {
+    function onTransfer(address, address, uint256) override external returns (bool) {
         //Uncomment above line when using parameters
         //require(msg.sender == address(snt), "Unauthorized");
         return true;
@@ -82,7 +83,7 @@ contract SNTController is TokenController, Owned {
      * @notice register and authorizes approve from token
      * @dev called by snt when an approval is made
      */
-    function onApprove(address, address, uint256) external returns (bool) {
+    function onApprove(address, address, uint256) override external returns (bool) {
         //Uncomment above line when using parameters
         //require(msg.sender == address(snt), "Unauthorized"); 
         return true;

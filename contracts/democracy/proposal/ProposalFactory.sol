@@ -1,4 +1,5 @@
-pragma solidity >=0.5.0 <0.6.0;
+// SPDX-License-Identifier: CC0-1.0
+pragma solidity >=0.6.0 <0.8.0;
 
 import "../../deploy/InstanceFactory.sol";
 import "../../deploy/Instance.sol";
@@ -13,7 +14,6 @@ contract ProposalFactory is InstanceFactory {
 
     constructor(InstanceAbstract _base, InstanceAbstract _init, InstanceAbstract _emergency) 
         InstanceFactory(_base, _init, _emergency)
-        public
     { }
 
     function createProposal(

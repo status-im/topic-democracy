@@ -1,4 +1,5 @@
-pragma solidity >=0.5.0 <0.6.0;
+// SPDX-License-Identifier: CC0-1.0
+pragma solidity >=0.6.0 <0.8.0;
 
 import "./ProposalAbstract.sol";
 
@@ -9,7 +10,7 @@ import "./ProposalAbstract.sol";
  */
 contract ProposalInit is ProposalAbstract {
 
-    constructor() public {
+    constructor() {
         token = MiniMeToken(address(-1));
     }
 
@@ -58,17 +59,17 @@ contract ProposalInit is ProposalAbstract {
         controller = _controller;
     }
 
-    function voteSigned(bytes32) external{}
-    function voteDirect(Vote) external{}
-    function tabulateDirect(address ) external{}
-    function tabulateSigned(Vote, uint256, bytes32[] calldata, bytes calldata) external{}
-    function tabulateDelegated(address,bool) external{}
-    function precomputeDelegation(address, bool) external{}
-    function finalize() external{}
-    function clear() external{}
-    function isApproved() external view returns (bool){}
-    function isFinalized() external view returns (bool){}
-    function getVoteHash(Vote) external view returns (bytes32){}
+    function voteSigned(bytes32) override external{}
+    function voteDirect(Vote) override external{}
+    function tabulateDirect(address ) override external{}
+    function tabulateSigned(Vote, uint256, bytes32[] calldata, bytes calldata) override external{}
+    function tabulateDelegated(address,bool) override external{}
+    function precomputeDelegation(address, bool) override external{}
+    function finalize() override external{}
+    function clear() override external{}
+    function isApproved() override external view returns (bool){}
+    function isFinalized() override external view returns (bool){}
+    function getVoteHash(Vote) override external view returns (bytes32){}
 
 
 }

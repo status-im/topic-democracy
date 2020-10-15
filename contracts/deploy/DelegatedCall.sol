@@ -1,4 +1,5 @@
-pragma solidity >=0.5.0 <0.6.0;
+// SPDX-License-Identifier: CC0-1.0
+pragma solidity >=0.6.0 <0.8.0;
 
 
 /**
@@ -6,9 +7,9 @@ pragma solidity >=0.5.0 <0.6.0;
  * @author Ricardo Guilherme Schmidt (Status Research & Development GmbH) 
  * @dev Encapsulates delegatecall related logic.
  */
-contract DelegatedCall {
+abstract contract DelegatedCall {
 
-    constructor(address _init, bytes memory _initMsg) internal {
+    constructor(address _init, bytes memory _initMsg) {
         if(_init == address(0)) return;
         bool success;
         (success, ) = _init.delegatecall(_initMsg);

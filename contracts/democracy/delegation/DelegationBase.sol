@@ -1,4 +1,5 @@
-pragma solidity >=0.5.0 <0.6.0;
+// SPDX-License-Identifier: CC0-1.0
+pragma solidity >=0.6.0 <0.8.0;
 
 import "./DelegationAbstract.sol";
 
@@ -12,7 +13,7 @@ contract DelegationBase is DelegationAbstract {
     /**
      * @notice Calls Constructor
      */
-    constructor(Delegation _parentDelegation) public {
+    constructor(Delegation _parentDelegation) {
         parentDelegation = _parentDelegation;
     }
 
@@ -22,7 +23,7 @@ contract DelegationBase is DelegationAbstract {
      *         If once defined and want to delegate to parent proxy, set `_to` as parent address. 
      * @param _to To what address the caller address will delegate to.
      */
-    function delegate(address _to) external {
+    function delegate(address _to) override external {
         updateDelegate(msg.sender, _to);
     }
 
@@ -43,6 +44,7 @@ contract DelegationBase is DelegationAbstract {
      * @return The address `_who` choosen delegate to.
      */
     function delegatedTo(address _who)
+        override
         external
         view 
         returns (address) 
@@ -55,12 +57,13 @@ contract DelegationBase is DelegationAbstract {
      *         or from parent level if `_who` never defined/defined to parent address.
      * @param _who What address to lookup.
      * @param _block Block number of what height in history.
-     * @return The address `_who` choosen delegate to.
+     * @return directDelegate The address `_who` choosen delegate to.
      */
     function delegatedToAt(
         address _who,
         uint _block
     )
+        override
         external
         view
         returns (address directDelegate)

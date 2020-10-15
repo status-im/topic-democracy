@@ -1,10 +1,5 @@
 module.exports = {
   default: {
-    deployment: {
-      host: "localhost", 
-      port: 8546,
-      type: "ws"
-    },
     dappConnection: [
       "$WEB3", 
       "ws://localhost:8546",
@@ -12,7 +7,7 @@ module.exports = {
     ],
     gas: "auto",
     strategy: "explicit",
-    contracts: {          
+    deploy: {          
       MiniMeTokenFactory: {
         deploy: true
       },

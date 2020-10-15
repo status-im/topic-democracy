@@ -1,4 +1,5 @@
-pragma solidity >=0.5.0 <0.6.0;
+// SPDX-License-Identifier: CC0-1.0
+pragma solidity >=0.6.0 <0.8.0;
 
 import "../../common/Controlled.sol";
 import "../../deploy/InstanceAbstract.sol";
@@ -12,7 +13,7 @@ import "./Proposal.sol";
  * @author Ricardo Guilherme Schmidt (Status Research & Development GmbH)
  * Store votes and tabulate results for Democracy. 
  */
-contract ProposalAbstract is InstanceAbstract, DelegationReader, Proposal, Controlled {   
+abstract contract ProposalAbstract is InstanceAbstract, DelegationReader, Proposal, Controlled {   
 
     MiniMeToken public token;
     uint256 public tabulationBlockDelay;
@@ -52,7 +53,8 @@ contract ProposalAbstract is InstanceAbstract, DelegationReader, Proposal, Contr
 
     function validDelegate(
         address _who
-    )        
+    )
+        override
         internal
         view
         returns(bool) 

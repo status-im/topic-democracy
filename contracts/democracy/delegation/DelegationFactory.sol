@@ -1,4 +1,5 @@
-pragma solidity >=0.5.0 <0.6.0;
+// SPDX-License-Identifier: CC0-1.0
+pragma solidity >=0.6.0 <0.8.0;
 
 import "../../deploy/InstanceFactory.sol";
 import "../../deploy/Instance.sol";
@@ -13,7 +14,6 @@ contract DelegationFactory is InstanceFactory {
 
     constructor(DelegationAbstract _base, DelegationAbstract _init, DelegationAbstract _emergency) 
         InstanceFactory(_base, _init, _emergency)
-        public
     { }
 
     function createDelegation(

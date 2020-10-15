@@ -1,10 +1,13 @@
 const utils = require("../utils/testUtils")
 
-const DelegationFactory = require('Embark/contracts/DelegationFactory');
-const DelegationBase = require('Embark/contracts/DelegationBase');
+const DelegationFactory = artifacts.require('DelegationFactory');
+const DelegationBase = artifacts.require('DelegationBase');
 
+let accounts;
+var defaultDelegateSub;
+var defaultDelegateSubSub;
 config({
-    contracts: {
+    contracts: {deploy:{
         "DelegationBase": {
             "args": [ utils.zeroAddress ]
         },
@@ -14,28 +17,20 @@ config({
             "args": ["$DelegationBase", "$DelegationInit", utils.zeroAddress]
         }
 
-      }
+      }}
+  }, (_err, web3_accounts) => {
+    accounts = web3_accounts
+    defaultDelegateSub = accounts[5];
+    defaultDelegateSubSub = accounts[6]
   });
 
 
 contract("DelegationBase", function() {
     this.timeout(0);
-    var defaultDelegateSub;
-    var defaultDelegateSubSub;
-    var accounts;
+;
     var RootDelegation;
     var SubDelegation;
     var SubSubDelegation;
-    before(function(done) {
-      web3.eth.getAccounts().then(function (res) {
-        accounts = res;
-        defaultDelegateSub = accounts[5];
-        defaultDelegateSubSub = accounts[6];
-        done();
-      });
-    });
-
-
     it("creates root delegation", async function () {
         let result = await DelegationFactory.methods.createDelegation(utils.zeroAddress).send();
         RootDelegation = new web3.eth.Contract(DelegationBase._jsonInterface, result.events.InstanceCreated.returnValues[0]);
@@ -46,6 +41,7 @@ contract("DelegationBase", function() {
     })
 
     it("creates first sub delegation", async function () {
+        console.log(RootDelegation._address,defaultDelegateSub,defaultDelegateSub)
         let result = await DelegationFactory.methods.createDelegation(RootDelegation._address,defaultDelegateSub,defaultDelegateSub).send();
         SubDelegation = new web3.eth.Contract(DelegationBase._jsonInterface, result.events.InstanceCreated.returnValues[0]);
         result = await SubDelegation.methods.delegatedTo(utils.zeroAddress).call()

@@ -1,4 +1,5 @@
-pragma solidity >=0.5.0 <0.6.0;
+// SPDX-License-Identifier: CC0-1.0
+pragma solidity >=0.6.0 <0.8.0;
 
 import "./Instance.sol";
 import "./PrototypeRegistry.sol";
@@ -14,9 +15,7 @@ contract InstanceFactory is PrototypeRegistry {
 
     event InstanceCreated(InstanceAbstract instance);
 
-    constructor(InstanceAbstract _base, InstanceAbstract _init, InstanceAbstract _emergency) 
-        public
-    {
+    constructor(InstanceAbstract _base, InstanceAbstract _init, InstanceAbstract _emergency) {
         base = _base;
         newPrototype(_base, _init, _emergency);
     }
@@ -26,7 +25,7 @@ contract InstanceFactory is PrototypeRegistry {
      * @dev should be the same method signature of `init` function 
      */
      
-    function ()
+    fallback() 
         external 
     {
         defaultCreate();

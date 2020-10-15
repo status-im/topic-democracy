@@ -23,11 +23,22 @@
   "homepage": "https://github.com/status-im/topic-democracy#readme",
   "devDependencies": {
     "npm-run-all": "4.1.5",
-    "rimraf": "3.0.0"
+    "rimraf": "3.0.0",
+    "embark": "^6.0.0",
+    "ethereumjs-util": "^6.1.0",
+    "embarkjs-web3": "^6.0.0",
+    "@openzeppelin/test-helpers": "^0.5.7",
+    "embarkjs": "^6.0.0",
+    "embark-basic-pipeline": "^6.0.0",
+    "embark-geth": "^6.0.0",
+    "solc": "^0.7.3"
   },
   "dependencies": {
-    "ethereumjs-util": "^6.1.0",
-    "embark": "^4.1.0",
+    "@material-ui/core": "^3.9.3",
+    "@material-ui/icons": "^3.0.2",
+    "@material-ui/lab": "^3.0.0-alpha.30",
+    "copy-to-clipboard": "^3.0.8",
+    "prop-types": "^15.6.2",
     "react": "^16.7.0",
     "react-blockies": "^1.4.1",
     "react-bootstrap": "^1.0.0-beta.8",
@@ -37,11 +48,6 @@
     "react-router-dom": "^5.0.0",
     "react-spinkit": "^3.0.0",
     "react-spinners": "^0.5.4",
-    "react-tabs": "^3.0.0",
-    "prop-types": "^15.6.2",
-    "copy-to-clipboard": "^3.0.8",
-    "@material-ui/core": "^3.9.3",
-    "@material-ui/icons": "^3.0.2",
-    "@material-ui/lab": "^3.0.0-alpha.30"
+    "react-tabs": "^3.0.0"
   }
 }

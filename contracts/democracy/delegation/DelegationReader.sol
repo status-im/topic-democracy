@@ -1,14 +1,16 @@
-pragma solidity >=0.5.0 <0.6.0;
+// SPDX-License-Identifier: CC0-1.0
+pragma solidity >=0.6.0 <0.8.0;
 
 import "./Delegation.sol";
 
-contract DelegationReader {
+abstract contract DelegationReader {
     Delegation delegation;
     mapping(address => address) delegationOf;
 
     function validDelegate(
         address _who
-    )        
+    )
+        virtual
         internal
         view
         returns(bool);

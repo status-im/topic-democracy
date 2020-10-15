@@ -1,4 +1,5 @@
-pragma solidity >=0.5.0 <0.6.0;
+// SPDX-License-Identifier: CC0-1.0
+pragma solidity >=0.6.0 <0.8.0;
 
 import "../../common/MessageSigned.sol";
 import "../../common/MerkleProof.sol";
@@ -14,9 +15,7 @@ contract ProposalBase is ProposalAbstract, MessageSigned {
     /**
      * @notice constructs a "ProposalAbstract Library Contract" for Instance and ProposalFactory
      */
-    constructor() 
-        public
-    {
+    constructor() {
         blockStart =  uint256(-1);
         voteBlockEnd = uint256(-1);
     }
@@ -31,6 +30,7 @@ contract ProposalBase is ProposalAbstract, MessageSigned {
      * @param _signatures merkle root of keccak256(address(this),uint8(vote))` leaf
      */
     function voteSigned(bytes32 _signatures)
+        override
         external
         votingPeriod
     {
@@ -50,6 +50,7 @@ contract ProposalBase is ProposalAbstract, MessageSigned {
      * @param _vote vote 
      */
     function voteDirect(Vote _vote)
+        override
         external
         votingPeriod
     {
@@ -63,6 +64,7 @@ contract ProposalBase is ProposalAbstract, MessageSigned {
      * @param _voter address which called voteDirect
      */
     function tabulateDirect(address _voter) 
+        override
         external
         tabulationPeriod
     {
@@ -78,7 +80,8 @@ contract ProposalBase is ProposalAbstract, MessageSigned {
      * @param _proof merkle proof
      * @param _signature plain signature used to produce the merkle leaf
      */
-    function tabulateSigned(Vote _vote, uint256 _position, bytes32[] calldata _proof, bytes calldata _signature) 
+    function tabulateSigned(Vote _vote, uint256 _position, bytes32[] calldata _proof, bytes calldata _signature)
+        override
         external
         tabulationPeriod
     {
@@ -97,7 +100,8 @@ contract ProposalBase is ProposalAbstract, MessageSigned {
      * @param _source holder which not voted but have a delegate that voted
      * @param _cached true if should use lookup values from precomputed
      */
-    function tabulateDelegated(address _source, bool _cached) 
+    function tabulateDelegated(address _source, bool _cached)
+        override 
         external
         tabulationPeriod
     {
@@ -115,7 +119,8 @@ contract ProposalBase is ProposalAbstract, MessageSigned {
     function precomputeDelegation(
         address _start,
         bool _revalidate
-    ) 
+    )
+        override
         external 
         tabulationPeriod
     {
@@ -136,6 +141,7 @@ contract ProposalBase is ProposalAbstract, MessageSigned {
      * @notice finalizes and set result
      */
     function finalize()
+        override
         external
         tabulationFinished
     {
@@ -149,7 +155,8 @@ contract ProposalBase is ProposalAbstract, MessageSigned {
      * @notice wipes all from state
      * @dev once the proposal result was read, it might be cleared up to free up state
      */
-    function clear() 
+    function clear()
+        override
         external
         onlyController 
     {
@@ -157,12 +164,12 @@ contract ProposalBase is ProposalAbstract, MessageSigned {
         selfdestruct(controller);
     }
 
-    function isApproved() external view returns (bool) {
+    function isApproved() override external view returns (bool) {
         require(result != Vote.Null, "Not finalized");
         return result == Vote.Approve;
     }
 
-    function isFinalized() external view returns (bool) {
+    function isFinalized() override external view returns (bool) {
         return result != Vote.Null;
     }  
 
@@ -180,7 +187,7 @@ contract ProposalBase is ProposalAbstract, MessageSigned {
         return recoverAddress(getSignHash(voteHash(_vote)), _signature);
     }
 
-    function getVoteHash(Vote _vote) external view returns (bytes32) { 
+    function getVoteHash(Vote _vote) override external view returns (bytes32) { 
         return voteHash(_vote);
     }
 

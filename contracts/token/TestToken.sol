@@ -1,4 +1,5 @@
-pragma solidity >=0.5.0 <0.6.0;
+// SPDX-License-Identifier: CC0-1.0
+pragma solidity >=0.6.0 <0.8.0;
 
 import "./StandardToken.sol";
 
@@ -7,7 +8,7 @@ import "./StandardToken.sol";
  */
 contract TestToken is StandardToken {
     
-    constructor() public { }
+    constructor() { }
 
     /**
      * @notice any caller can mint any `_amount` 

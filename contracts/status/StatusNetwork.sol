@@ -1,4 +1,5 @@
-pragma solidity >=0.5.0 <0.6.0;
+// SPDX-License-Identifier: GPL-3.0-or-later
+pragma solidity >=0.6.0 <0.8.0;
 
 import "./SNTController.sol";
 
@@ -15,8 +16,7 @@ contract StatusNetwork is SNTController {
     constructor(
         address payable _owner,
         MiniMeToken _snt
-    ) 
-        public 
+    )
         SNTController(_owner, _snt)    
     { }
 
