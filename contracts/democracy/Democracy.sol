@@ -6,7 +6,7 @@ import "./delegation/DelegationFactory.sol";
 import "./proposal/ProposalFactory.sol";
 
 /**
- * @author Ricardo Guilherme Schmidt (Status Research & Development GmbH)  
+ * @author Ricardo Guilherme Schmidt (Status Research & Development GmbH)
  */
 contract Democracy {
 

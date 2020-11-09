@@ -1,3 +1,4 @@
+import EmbarkJS from '../../embarkArtifacts/embarkjs';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Blockies from 'react-blockies';
@@ -86,6 +87,9 @@ class EthAddress extends React.Component {
 
 
 	setValue(value){
+		if(!value) {
+			value = ""
+		}
 		value = value.trim();
 		const validAddress = /^(0x)?[0-9a-f]{40}$/i.test(value);
 		const acceptedOutput = validAddress && (this.props.allowZero || value != nullAddress);

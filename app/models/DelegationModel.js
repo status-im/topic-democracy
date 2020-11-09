@@ -1,6 +1,6 @@
-import EmbarkJS from './embarkArtifacts/EmbarkJS';
-import Delegation from './embarkArtifacts/contracts/Delegation';
-import DelegationFactory from './embarkArtifacts/contracts/DelegationFactory';
+import EmbarkJS from '../../embarkArtifacts/embarkjs';
+import Delegation from '../../embarkArtifacts/contracts/Delegation';
+import DelegationFactory from '../../embarkArtifacts/contracts/DelegationFactory';
 
 class DelegationModel {
 

@@ -55,7 +55,7 @@ class DelegationUI extends React.Component {
 
     editDelegationOf(delegate) {
         const editDelegation = this.state.editDelegation;
-        if(!delegateChain.includes(delegate)){
+        if(!editDelegation.includes(delegate)){
             editDelegation.push(delegate);
             this.setState({editDelegation});
             this.props.Delegation.methods.delegatedTo(delegate).call().then((delegatedTo) => {
@@ -77,7 +77,7 @@ class DelegationUI extends React.Component {
 			<div className={className} >
                 <div>
                     <p>Delegation:</p>
-                    <EthAddress value={Delegation.options.address} />
+                    <EthAddress value={Delegation.address} />
                 </div>
                 <div>
                     <small>Delegate Chain:</small>
@@ -91,7 +91,8 @@ class DelegationUI extends React.Component {
                 </div>
                 <div>
                     <p>Delegate Set</p>
-                    <EthAddress defaultValue={editDelegate} control={true} onChange={(editDelegate) => {
+                    <EthAddress defaultValue={editDelegate} control={true} onChange={(e) => {
+                        let editDelegate = e.target.value;
                         this.setState({editDelegate});
                         if(editDelegate != delegateChain[0]) {
                             this.setState({editDelegation : []});
@@ -102,8 +103,8 @@ class DelegationUI extends React.Component {
                     {editDelegation.length > 0 &&
                         <Breadcrumbs arial-label="Breadcrumb" maxItems={5}>
                         {
-                            editDelegation.map((value) => {
-                                return <EthAddress value={value} />
+                            editDelegation.map((value, i) => {
+                                return <EthAddress key={i} value={value} />
                             })
                         }
                         </Breadcrumbs>

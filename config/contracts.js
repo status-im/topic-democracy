@@ -40,7 +40,14 @@ module.exports = {
       
     }
   },
-
+  development:{
+    dappConnection: [
+      "$EMBARK",
+      "$WEB3", 
+      "ws://localhost:8546",
+      "http://localhost:8545"
+    ]
+  },
   testnet: {
     contracts: {
       MiniMeTokenFactory: {

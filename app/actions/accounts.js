@@ -1,4 +1,4 @@
-import ERC20Token from 'Embark/contracts/ERC20Token';
+import ERC20Token from '../../embarkArtifacts/contracts/ERC20Token';
 import { actions as accountActions } from '../reducers/accounts'
 
 const { receiveAccounts } = accountActions

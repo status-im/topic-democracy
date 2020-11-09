@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import EmbarkJS from 'Embark/EmbarkJS';
-import Delegation from 'Embark/contracts/Delegation';
+import EmbarkJS from '../embarkArtifacts/embarkjs';
+import Delegation from '../embarkArtifacts/contracts/Delegation';
 import { HashRouter, Route, Redirect, Link } from "react-router-dom";
 
 import './TopicDemocracy.css';
@@ -34,7 +34,8 @@ class TopicDemocracy extends React.Component {
 
     this.state = {
       error: null,
-      defaultAccount: null
+      defaultAccount: null,
+      deployedAddress: null
     };
   }
 
@@ -43,6 +44,7 @@ class TopicDemocracy extends React.Component {
         if (err) {
             return this.setState({ error: err.message || err });
         }
+        console.log(web3.eth.defaultAccount)
         this.setState({ defaultAccount: web3.eth.defaultAccount, blockchainEnabled: true })
     });
 
@@ -50,7 +52,7 @@ class TopicDemocracy extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { blockchainEnabled, defaultAccount } = this.state;
+    const { blockchainEnabled, defaultAccount, deployedAddress } = this.state;
     if (!blockchainEnabled) {
         return (
             <div>Waiting for blockchain.</div>
@@ -74,7 +76,7 @@ class TopicDemocracy extends React.Component {
         </AppBar>
         <main className={classes.layout}>
           <Route exact path="/" render={({ match }) => (
-            <DelegationFactoryUI  account={defaultAccount} />
+            <DelegationFactoryUI  account={defaultAccount} onDeploy={(deployedAddress) => {this.setState({deployedAddress})} } />
           )} />
           <Route path="/:address" render={({ match }) => (
             <DelegationUI account={defaultAccount} Delegation={new EmbarkJS.Blockchain.Contract({ abi: Delegation._jsonInterface, address: match.params.address }) } />

@@ -1,6 +1,6 @@
 module.exports = {
   default: {
-    enabled: true,
+    enabled: false,
     ipfs_bin: "ipfs",
     available_providers: ["ipfs"],
     upload: {
@@ -18,7 +18,6 @@ module.exports = {
     ]
   },
   development: {
-    enabled: true,
     upload: {
       provider: "ipfs",
       host: "localhost",
